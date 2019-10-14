@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import { Grid, Transition } from 'semantic-ui-react';
+import { Grid, Transition, Checkbox } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
 import PostCard from '../components/PostCard';
@@ -9,10 +9,25 @@ import { FETCH_POSTS_QUERY } from '../util/graphql';
 
 const Home = () => {
   const { user } = useContext(AuthContext);
-  const {
+  let {
     loading,
     data: { getPosts: posts }
   } = useQuery(FETCH_POSTS_QUERY);
+
+  const [shownPosts, setShownPosts] = useState(posts)
+  useEffect(() => {
+    setShownPosts(posts)
+  }, [posts])
+
+  const handleCheckboxOnChange = (e, { checked }) => {
+    if(checked) {
+      posts = posts.filter(post => post.likeCount > 0);
+      setShownPosts(posts)
+    }else{
+      posts = posts.filter(post => post);
+      setShownPosts(posts)
+    }
+  }
 
   return (
     <Grid columns={3}>
@@ -23,14 +38,15 @@ const Home = () => {
         {user && (
           <Grid.Column>
             <PostForm />
+            <Checkbox label='Show liked comments' onChange={handleCheckboxOnChange}/>
           </Grid.Column>
         )}
         {loading ? (
           <h1>Loading posts..</h1>
         ) : (
           <Transition.Group>
-            {posts &&
-              posts.map((post) => (
+            {shownPosts &&
+              shownPosts.map((post) => (
                 <Grid.Column key={post.id} style={{ marginBottom: 20 }}>
                   <PostCard post={post} />
                 </Grid.Column>

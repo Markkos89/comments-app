@@ -38,7 +38,7 @@ const authReducer = (state, action) => {
   }
 }
 
-AuthProvider = (props) => {
+const AuthProvider = (props) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   const login = (userData) => {
