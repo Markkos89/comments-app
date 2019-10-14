@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
-import { Button, Confirm, Icon } from 'semantic-ui-react';
 
-import { FETCH_POSTS_QUERY } from '../util/graphql';
-import MyPopup from '../util/MyPopup';
+import { useMutation } from "@apollo/react-hooks";
+import { Button, Confirm, Icon } from "semantic-ui-react";
+
+import { FETCH_POSTS_QUERY } from "../util/graphql";
+import MyPopup from "../util/MyPopup";
 
 const DELETE_POST_MUTATION = gql`
   mutation deletePost($postId: ID!) {
@@ -39,7 +40,7 @@ const DeleteButton = ({ postId, commentId, callback }) => {
         const data = proxy.readQuery({
           query: FETCH_POSTS_QUERY
         });
-        data.getPosts = data.getPosts.filter((p) => p.id !== postId);
+        data.getPosts = data.getPosts.filter(p => p.id !== postId);
         proxy.writeQuery({ query: FETCH_POSTS_QUERY, data });
       }
       if (callback) callback();
@@ -51,7 +52,7 @@ const DeleteButton = ({ postId, commentId, callback }) => {
   });
   return (
     <>
-      <MyPopup content={commentId ? 'Delete comment' : 'Delete post'}>
+      <MyPopup content={commentId ? "Delete comment" : "Delete post"}>
         <Button
           as="div"
           color="red"
@@ -68,6 +69,6 @@ const DeleteButton = ({ postId, commentId, callback }) => {
       />
     </>
   );
-}
+};
 
 export default DeleteButton;
